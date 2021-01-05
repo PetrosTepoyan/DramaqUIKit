@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="DramaqUIKit" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Jog-ZF-Hxc">
+                                <rect key="frame" x="0.0" y="82" width="414" height="814"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="recordViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="recordViewCell" id="cCK-8K-HA7" customClass="RecordViewTableCell" customModule="DramaqUIKit" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cCK-8K-HA7" id="dbY-TN-Mh2">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bBZ-WC-KyY">
+                                <rect key="frame" x="164" y="44" width="87" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Jog-ZF-Hxc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="39r-KH-E8k"/>
+                            <constraint firstItem="Jog-ZF-Hxc" firstAttribute="top" secondItem="bBZ-WC-KyY" secondAttribute="bottom" constant="8" id="9z8-pL-gST"/>
+                            <constraint firstItem="bBZ-WC-KyY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="164" id="DfZ-7X-7Vv"/>
+                            <constraint firstItem="Jog-ZF-Hxc" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Pm6-AI-xsX"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bBZ-WC-KyY" secondAttribute="trailing" constant="163" id="a71-CE-L3K"/>
+                            <constraint firstItem="Jog-ZF-Hxc" firstAttribute="top" secondItem="bBZ-WC-KyY" secondAttribute="bottom" constant="8" symbolic="YES" id="fPf-IP-MJG"/>
+                            <constraint firstItem="bBZ-WC-KyY" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="pgu-LF-xoB"/>
+                            <constraint firstAttribute="bottom" secondItem="Jog-ZF-Hxc" secondAttribute="bottom" id="tTJ-bd-jxG"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="addRecordButton" destination="bBZ-WC-KyY" id="YnK-tt-0iL"/>
+                        <outlet property="table" destination="Jog-ZF-Hxc" id="uX8-aU-tZ4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-197.10144927536234" y="57.589285714285708"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
