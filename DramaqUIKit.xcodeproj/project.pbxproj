@@ -19,24 +19,17 @@
 		150F707D25A268F4007D9A6E /* DateHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150F707C25A268F4007D9A6E /* DateHeader.swift */; };
 		150F708225A27063007D9A6E /* RecordViewTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150F708125A27063007D9A6E /* RecordViewTableCell.swift */; };
 		150F708725A284CD007D9A6E /* AddRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150F708625A284CD007D9A6E /* AddRecordView.swift */; };
-		153891B225A4F6A7008AD50C /* RecordsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153891B125A4F6A7008AD50C /* RecordsTableView.swift */; };
+		15234D9925A9D02800A64FA3 /* AnimationPatterns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15234D9825A9D02800A64FA3 /* AnimationPatterns.swift */; };
+		15234DAA25A9FFFF00A64FA3 /* DateSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15234DA925A9FFFF00A64FA3 /* DateSetup.swift */; };
+		15234DBB25AA28C400A64FA3 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15234DBA25AA28C300A64FA3 /* CategoryView.swift */; };
 		153891B725A50E26008AD50C /* ViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153891B625A50E26008AD50C /* ViewController+Extensions.swift */; };
 		154B26E7259927ED00D6C4FB /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B26E6259927ED00D6C4FB /* RecordView.swift */; };
-		154B2721259980EE00D6C4FB /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B271E259980EE00D6C4FB /* Animations.swift */; };
-		154B2722259980EE00D6C4FB /* RepetitionPatterns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B271A259980EE00D6C4FB /* RepetitionPatterns.swift */; };
-		154B2724259980EE00D6C4FB /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B2716259980EE00D6C4FB /* CategoryView.swift */; };
-		154B2725259980EE00D6C4FB /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B2717259980EE00D6C4FB /* EnvironmentValues.swift */; };
-		154B2726259980EE00D6C4FB /* MapAnnotationPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B2714259980EE00D6C4FB /* MapAnnotationPoint.swift */; };
-		154B2728259980EE00D6C4FB /* DetailedRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B271C259980EE00D6C4FB /* DetailedRecordView.swift */; };
-		154B2729259980EE00D6C4FB /* RecordViewGraphics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B2720259980EE00D6C4FB /* RecordViewGraphics.swift */; };
-		154B272B259980EE00D6C4FB /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B271B259980EE00D6C4FB /* BlurView.swift */; };
-		154B272C259980EE00D6C4FB /* RectangleToCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B2718259980EE00D6C4FB /* RectangleToCircle.swift */; };
-		154B272D259980EE00D6C4FB /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B271F259980EE00D6C4FB /* VisualEffectView.swift */; };
-		154B272E259980EE00D6C4FB /* DateSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154B271D259980EE00D6C4FB /* DateSetup.swift */; };
 		154F07C625A2A21E00A13CD0 /* RecordViewTable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154F07C525A2A21E00A13CD0 /* RecordViewTable+Extensions.swift */; };
-		154F07CE25A3609600A13CD0 /* AddRecordViewAnimationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154F07CD25A3609600A13CD0 /* AddRecordViewAnimationDelegate.swift */; };
-		154F07D325A3780000A13CD0 /* DraggableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154F07D225A3780000A13CD0 /* DraggableLabel.swift */; };
 		1558A32A259F887300EF8E5E /* RecordViewLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1558A329259F887300EF8E5E /* RecordViewLabel.swift */; };
+		156E947225A7694B004CAD57 /* RecordsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E947125A7694B004CAD57 /* RecordsModel.swift */; };
+		156E947725A7F221004CAD57 /* ViewController+Contex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E947625A7F221004CAD57 /* ViewController+Contex.swift */; };
+		156E947C25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E947B25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift */; };
+		156E948125A8AE31004CAD57 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E948025A8AE31004CAD57 /* Double+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,24 +68,17 @@
 		150F707C25A268F4007D9A6E /* DateHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHeader.swift; sourceTree = "<group>"; };
 		150F708125A27063007D9A6E /* RecordViewTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewTableCell.swift; sourceTree = "<group>"; };
 		150F708625A284CD007D9A6E /* AddRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordView.swift; sourceTree = "<group>"; };
-		153891B125A4F6A7008AD50C /* RecordsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsTableView.swift; sourceTree = "<group>"; };
+		15234D9825A9D02800A64FA3 /* AnimationPatterns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationPatterns.swift; sourceTree = "<group>"; };
+		15234DA925A9FFFF00A64FA3 /* DateSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateSetup.swift; sourceTree = "<group>"; };
+		15234DBA25AA28C300A64FA3 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		153891B625A50E26008AD50C /* ViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Extensions.swift"; sourceTree = "<group>"; };
 		154B26E6259927ED00D6C4FB /* RecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
-		154B2714259980EE00D6C4FB /* MapAnnotationPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAnnotationPoint.swift; sourceTree = "<group>"; };
-		154B2716259980EE00D6C4FB /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
-		154B2717259980EE00D6C4FB /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
-		154B2718259980EE00D6C4FB /* RectangleToCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangleToCircle.swift; sourceTree = "<group>"; };
-		154B271A259980EE00D6C4FB /* RepetitionPatterns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepetitionPatterns.swift; sourceTree = "<group>"; };
-		154B271B259980EE00D6C4FB /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
-		154B271C259980EE00D6C4FB /* DetailedRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedRecordView.swift; sourceTree = "<group>"; };
-		154B271D259980EE00D6C4FB /* DateSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSetup.swift; sourceTree = "<group>"; };
-		154B271E259980EE00D6C4FB /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
-		154B271F259980EE00D6C4FB /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
-		154B2720259980EE00D6C4FB /* RecordViewGraphics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewGraphics.swift; sourceTree = "<group>"; };
 		154F07C525A2A21E00A13CD0 /* RecordViewTable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecordViewTable+Extensions.swift"; sourceTree = "<group>"; };
-		154F07CD25A3609600A13CD0 /* AddRecordViewAnimationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordViewAnimationDelegate.swift; sourceTree = "<group>"; };
-		154F07D225A3780000A13CD0 /* DraggableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableLabel.swift; sourceTree = "<group>"; };
 		1558A329259F887300EF8E5E /* RecordViewLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewLabel.swift; sourceTree = "<group>"; };
+		156E947125A7694B004CAD57 /* RecordsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsModel.swift; sourceTree = "<group>"; };
+		156E947625A7F221004CAD57 /* ViewController+Contex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Contex.swift"; sourceTree = "<group>"; };
+		156E947B25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extension.swift"; sourceTree = "<group>"; };
+		156E948025A8AE31004CAD57 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,14 +109,6 @@
 		1503A5FE2592ABB800BBAB1C = {
 			isa = PBXGroup;
 			children = (
-				153891B125A4F6A7008AD50C /* RecordsTableView.swift */,
-				154F07D225A3780000A13CD0 /* DraggableLabel.swift */,
-				154F07CD25A3609600A13CD0 /* AddRecordViewAnimationDelegate.swift */,
-				153891B625A50E26008AD50C /* ViewController+Extensions.swift */,
-				154B26E6259927ED00D6C4FB /* RecordView.swift */,
-				150F708625A284CD007D9A6E /* AddRecordView.swift */,
-				1558A329259F887300EF8E5E /* RecordViewLabel.swift */,
-				150F708125A27063007D9A6E /* RecordViewTableCell.swift */,
 				1503A6092592ABB900BBAB1C /* DramaqUIKit */,
 				1503A6232592ABBE00BBAB1C /* DramaqUIKitTests */,
 				1503A62E2592ABBE00BBAB1C /* DramaqUIKitUITests */,
@@ -151,12 +129,23 @@
 		1503A6092592ABB900BBAB1C /* DramaqUIKit */ = {
 			isa = PBXGroup;
 			children = (
-				1503A60A2592ABB900BBAB1C /* AppDelegate.swift */,
-				1503A60C2592ABB900BBAB1C /* SceneDelegate.swift */,
-				154B273B2599812400D6C4FB /* RecordViewSetup */,
+				15234D9825A9D02800A64FA3 /* AnimationPatterns.swift */,
+				156E948025A8AE31004CAD57 /* Double+Extensions.swift */,
+				156E947B25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift */,
+				156E947125A7694B004CAD57 /* RecordsModel.swift */,
+				156E947625A7F221004CAD57 /* ViewController+Contex.swift */,
+				153891B625A50E26008AD50C /* ViewController+Extensions.swift */,
 				1503A60E2592ABB900BBAB1C /* ViewController.swift */,
 				154F07C525A2A21E00A13CD0 /* RecordViewTable+Extensions.swift */,
+				154B26E6259927ED00D6C4FB /* RecordView.swift */,
+				15234DBA25AA28C300A64FA3 /* CategoryView.swift */,
+				15234DA925A9FFFF00A64FA3 /* DateSetup.swift */,
+				150F708625A284CD007D9A6E /* AddRecordView.swift */,
+				1558A329259F887300EF8E5E /* RecordViewLabel.swift */,
+				150F708125A27063007D9A6E /* RecordViewTableCell.swift */,
 				150F707C25A268F4007D9A6E /* DateHeader.swift */,
+				1503A60A2592ABB900BBAB1C /* AppDelegate.swift */,
+				1503A60C2592ABB900BBAB1C /* SceneDelegate.swift */,
 				1503A6102592ABB900BBAB1C /* Main.storyboard */,
 				1503A6162592ABBE00BBAB1C /* Assets.xcassets */,
 				1503A6182592ABBE00BBAB1C /* LaunchScreen.storyboard */,
@@ -182,24 +171,6 @@
 				1503A6312592ABBE00BBAB1C /* Info.plist */,
 			);
 			path = DramaqUIKitUITests;
-			sourceTree = "<group>";
-		};
-		154B273B2599812400D6C4FB /* RecordViewSetup */ = {
-			isa = PBXGroup;
-			children = (
-				154B2716259980EE00D6C4FB /* CategoryView.swift */,
-				154B2720259980EE00D6C4FB /* RecordViewGraphics.swift */,
-				154B271B259980EE00D6C4FB /* BlurView.swift */,
-				154B271D259980EE00D6C4FB /* DateSetup.swift */,
-				154B2718259980EE00D6C4FB /* RectangleToCircle.swift */,
-				154B2717259980EE00D6C4FB /* EnvironmentValues.swift */,
-				154B271E259980EE00D6C4FB /* Animations.swift */,
-				154B271A259980EE00D6C4FB /* RepetitionPatterns.swift */,
-				154B271C259980EE00D6C4FB /* DetailedRecordView.swift */,
-				154B2714259980EE00D6C4FB /* MapAnnotationPoint.swift */,
-				154B271F259980EE00D6C4FB /* VisualEffectView.swift */,
-			);
-			path = RecordViewSetup;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -333,29 +304,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				1503A6152592ABB900BBAB1C /* DramaqUIKit.xcdatamodeld in Sources */,
-				154B2722259980EE00D6C4FB /* RepetitionPatterns.swift in Sources */,
-				154B272E259980EE00D6C4FB /* DateSetup.swift in Sources */,
+				15234DAA25A9FFFF00A64FA3 /* DateSetup.swift in Sources */,
+				156E947C25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift in Sources */,
+				156E947225A7694B004CAD57 /* RecordsModel.swift in Sources */,
 				154F07C625A2A21E00A13CD0 /* RecordViewTable+Extensions.swift in Sources */,
+				15234DBB25AA28C400A64FA3 /* CategoryView.swift in Sources */,
 				1503A60F2592ABB900BBAB1C /* ViewController.swift in Sources */,
-				154B2728259980EE00D6C4FB /* DetailedRecordView.swift in Sources */,
+				156E948125A8AE31004CAD57 /* Double+Extensions.swift in Sources */,
 				150F708725A284CD007D9A6E /* AddRecordView.swift in Sources */,
-				154B2721259980EE00D6C4FB /* Animations.swift in Sources */,
 				154B26E7259927ED00D6C4FB /* RecordView.swift in Sources */,
-				154B2725259980EE00D6C4FB /* EnvironmentValues.swift in Sources */,
-				154B2729259980EE00D6C4FB /* RecordViewGraphics.swift in Sources */,
+				15234D9925A9D02800A64FA3 /* AnimationPatterns.swift in Sources */,
 				153891B725A50E26008AD50C /* ViewController+Extensions.swift in Sources */,
-				154B272C259980EE00D6C4FB /* RectangleToCircle.swift in Sources */,
-				154B272B259980EE00D6C4FB /* BlurView.swift in Sources */,
-				154F07D325A3780000A13CD0 /* DraggableLabel.swift in Sources */,
-				153891B225A4F6A7008AD50C /* RecordsTableView.swift in Sources */,
 				150F708225A27063007D9A6E /* RecordViewTableCell.swift in Sources */,
-				154B272D259980EE00D6C4FB /* VisualEffectView.swift in Sources */,
 				150F707D25A268F4007D9A6E /* DateHeader.swift in Sources */,
 				1503A60B2592ABB900BBAB1C /* AppDelegate.swift in Sources */,
-				154B2726259980EE00D6C4FB /* MapAnnotationPoint.swift in Sources */,
 				1503A60D2592ABB900BBAB1C /* SceneDelegate.swift in Sources */,
-				154F07CE25A3609600A13CD0 /* AddRecordViewAnimationDelegate.swift in Sources */,
-				154B2724259980EE00D6C4FB /* CategoryView.swift in Sources */,
+				156E947725A7F221004CAD57 /* ViewController+Contex.swift in Sources */,
 				1558A32A259F887300EF8E5E /* RecordViewLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

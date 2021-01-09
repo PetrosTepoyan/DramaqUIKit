@@ -9,6 +9,10 @@ import Foundation
 import UIKit
 import CoreData
 
+protocol AddRecordViewDelegate: class {
+    func didFinish()
+}
+
 class AddRecordView: UIView {
     let priceTF = UITextField()
     let placeTF = UITextField()
@@ -48,7 +52,6 @@ class AddRecordView: UIView {
             contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             contentView.topAnchor.constraint(equalTo: self.topAnchor),
-            ///
             
             priceTF.topAnchor.constraint(equalTo: draggableLabel.bottomAnchor, constant: 30),
             priceTF.centerXAnchor.constraint(equalTo: self.centerXAnchor),
@@ -62,7 +65,7 @@ class AddRecordView: UIView {
         ])
         
         contentViewBottomAnchor = contentView.bottomAnchor.constraint(equalTo: draggableLabel.bottomAnchor, constant: 400)
-        contentViewBottomAnchor?.isActive = true
+        contentViewBottomAnchor!.isActive = true
         
         draggableLabel.isUserInteractionEnabled = true
         let pan = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
@@ -89,29 +92,20 @@ class AddRecordView: UIView {
     @objc func panGesture(_ sender: UIPanGestureRecognizer) {
         let home = sender.view?.superview?.parentViewController as! ViewController
         let translation = sender.translation(in: self)
-
-        let dy = home.addRecordView.frame.minY
-        let dx = home.addRecordView.frame.minX
         let draggableLabelBounds = draggableLabel
             .frame
             .offsetBy(dx: translation.x, dy: translation.y)
-            .offsetBy(dx: dx, dy: dy)
-
-//        let context: NSManagedObjectContext = {
-//            let result = AppDelegate()
-//            return result.persistentContainer.viewContext
-//        }()
+            .offsetBy(dx: 10, dy: 10)
+        
         
         switch sender.state {
         case .began:
-            self.startingPoint.x = home.addRecordViewCenterXAnchor!.constant
-            self.startingPoint.y = home.addRecordViewCenterYAnchor!.constant
-
+            self.startingPoint = home.addRecordViewCenter!
+            
         case .changed:
             UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.67) {
-                home.addRecordViewCenterXAnchor!.constant = self.startingPoint.x + translation.x
-                home.addRecordViewCenterYAnchor!.constant = self.startingPoint.y + translation.y
-                home.view.layoutIfNeeded()
+                self.center.x = self.startingPoint.x + translation.x
+                self.center.y = self.startingPoint.y + translation.y
             }.startAnimation()
             
             if home.addRecordSuccessFrame.intersects(draggableLabelBounds) {
@@ -125,14 +119,15 @@ class AddRecordView: UIView {
                     record!.date = Date()
                     record!.category = Category.allCases.randomElement()!.rawValue
                     record!.purchaseMethod = "Card"
-
+                    
                     recordView = RecordView(record: record!)
                     recordView.translatesAutoresizingMaskIntoConstraints = false
                     recordView.alpha = 0.0
-                    superview?.addSubview(recordView)
+                    recordView.layer.zPosition = draggableLabel.layer.zPosition + 1
+                    self.addSubview(recordView)
                     NSLayoutConstraint.activate([
                         recordView.widthAnchor.constraint(equalTo: home.table.widthAnchor, constant: -20),
-                        recordView.heightAnchor.constraint(equalToConstant: 60),
+                        recordView.heightAnchor.constraint(equalToConstant: 70),
                         recordView.centerYAnchor.constraint(equalTo: draggableLabel.centerYAnchor),
                         recordView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
                     ])
@@ -140,7 +135,6 @@ class AddRecordView: UIView {
                 }
                 
                 UIView.animate(withDuration: 0.5) { [self] in
-                    contentViewBottomAnchor?.constant = 0
                     recordView.alpha = 1.0
                     priceTF.alpha = 0.0
                     placeTF.alpha = 0.0
@@ -149,64 +143,59 @@ class AddRecordView: UIView {
                 }
             }
             
-            if !home.addRecordSuccessFrame.intersects(draggableLabelBounds) {
-                
-            }
-
-        case .ended:
-
-            if home.addRecordSuccessFrame.intersects(draggableLabelBounds) {
-                
-                home.table.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-                
-                home.addRecordViewCenterYAnchor?.constant = -home.table.frame.minY - 86
-                home.addRecordViewCenterXAnchor?.constant = 0
-                UIView.animate(withDuration: 1) {
+            if !home.addRecordDismissFrame.intersects(draggableLabelBounds) &&
+                !home.addRecordSuccessFrame.intersects(draggableLabelBounds) {
+                UIView.animate(withDuration: 0.5) { [self] in
+//                    contentViewBottomAnchor?.constant = 400
+                    recordView?.alpha = 0.0
+                    priceTF.alpha = 1.0
+                    placeTF.alpha = 1.0
+                    contentView.alpha = 1.0
+                    recordView = nil
+                    record = nil
                     home.view.layoutIfNeeded()
                 }
+            }
+            
+            
+        case .ended:
+            
+            if home.addRecordDismissFrame.intersects(draggableLabelBounds) {
+                delegate?.didFinish()
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
-                    print("Going to save")
-                    do {
-                        try home.context.save()
-                    } catch {
-                        let nsError = error as NSError
-                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                    }
-                    recordView.removeFromSuperview()
-                    delegate?.didFinish()
-                    
-                    
+            } else if home.addRecordSuccessFrame.intersects(draggableLabelBounds) {
+                if home.model.data.count != 0 {
+                    home.table.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                 }
                 
-                let cell = home.table.cellForRow(at: IndexPath(item: 0, section: 0))
-//                print(cell)
+                home.model.add(record: record!)
+                
+                if home.model.data[0].count == 1 { // means that the record with new date has just been added
+                    home.table.insertSections(IndexSet(0...0), with: .bottom)
+                    
+                } else {
+                    home.table.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
+                }
+                let cell = home.table.cellForRow(at: IndexPath(row: 0, section: 0))
                 cell?.alpha = 0.0
                 
-                home.table.reloadData()
+                DispatchQueue.main.asyncAfter(deadline: .now() + AnimationPatterns.removeAddRecordView.duration - 0.05) {
+                    cell?.alpha = 1.0
+                }
                 
-                UIView.transition(with: home.table,
-                                  duration: 0.35,
-                                  options: [.preferredFramesPerSecond60, .transitionCrossDissolve, .curveEaseInOut],
-                                  animations: {
-                                    home.table.reloadData()
-//                                    cell?.alpha = 1.0
-
-                                  })
+                delegate?.didFinish()
+                return 
                 
-                
-
             } else {
                 UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.4, options: []) {
-                    home.addRecordViewCenterXAnchor!.constant = 0
-                    home.addRecordViewCenterYAnchor!.constant = 0
-                    home.view.layoutIfNeeded()
+                    home.addRecordView!.center.x = home.view.center.x
+                    home.addRecordView!.center.y = home.view.center.y
                 } completion: { (done) in
-
+                    
                 }
             }
-
-            home.table.reloadData()
+            
+            
             
         default:
             ()
@@ -229,11 +218,11 @@ extension UIResponder {
 import CoreData
 
 public extension NSManagedObject {
-
+    
     convenience init(usedContext: NSManagedObjectContext) {
         let name = String(describing: type(of: self))
         let entity = NSEntityDescription.entity(forEntityName: name, in: usedContext)!
         self.init(entity: entity, insertInto: usedContext)
     }
-
+    
 }

@@ -15,51 +15,24 @@ class ViewController: UIViewController {
         let result = AppDelegate()
         return result.persistentContainer.viewContext
     }()
-    var data: [Record] {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Record")
-        request.sortDescriptors = [.init(key: "date", ascending: true)]
-        request.returnsObjectsAsFaults = false
-        var records : [Record] = []
-        do {
-            let result = try context.fetch(request)
-            records = (result as! [NSManagedObject]).map { $0 as! Record }
-            
-        } catch {
-            
-            print("Failed")
-        }
-        return records.reversed()
-        
-    }
     
-    var dates: [String] {
-        var uniqueDates: [String] = []
-        for i in data.map({ $0.date }) {
-            let d = i!.getDay()
-            if !uniqueDates.contains(d) {
-                uniqueDates.append(d)
-            }
-        }
-        return uniqueDates
-        
-    }
-    
-    var records_2d: [[Record]] = []
+//    var model: RecordsModel { RecordsModel(context: context) }
+    var model: RecordsModel!
     
     let addRecordSuccessFrame: CGRect   = CGRect(x: -2 * UIScreen.main.bounds.width,
                                                  y: UIScreen.main.bounds.height * 1/3,
                                                  width: UIScreen.main.bounds.width * 4,
                                                  height: UIScreen.main.bounds.height * 4)
     
-    let addRecordDismissFrame: CGRect   = CGRect(x: 0,
-                                                 y: 0,
+    let addRecordDismissFrame: CGRect   = CGRect(x: -2 * UIScreen.main.bounds.width,
+                                                 y: -UIScreen.main.bounds.height * 1/4,
                                                  width: UIScreen.main.bounds.width * 2,
-                                                 height: UIScreen.main.bounds.height * 1/4)
+                                                 height: UIScreen.main.bounds.height * 1/2)
     
     var record: Record? = nil
-    let addRecordView = AddRecordView()
+    var addRecordView: AddRecordView?
     var startingPoint: CGPoint = CGPoint(x: 0, y: 0)
-    
+    var isEditingRecordsTable: Bool = false
     
     @IBOutlet weak var table: UITableView!
     @IBOutlet weak var addRecordButton: UIButton!
@@ -76,6 +49,7 @@ class ViewController: UIViewController {
     var addRecordViewHeightAnchor: NSLayoutConstraint?
     var addRecordViewCenterYAnchor: NSLayoutConstraint?
     var addRecordViewCenterXAnchor: NSLayoutConstraint?
+    var addRecordViewCenter: CGPoint?
     
     var blurView: UIVisualEffectView!
     
@@ -83,40 +57,31 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         table.delegate = self
         table.dataSource = self
-        addRecordView.delegate = self
-        
-        print(data.count)
-    
-        for date in dates {
-            let nested = data.filter { $0.date?.getDay() == date }
-            records_2d.append(nested)
-        }
+        model = RecordsModel(context: context)
+//        table.allowsMultipleSelection = true
+//        table.allowsMultipleSelectionDuringEditing = true
         
         self.blurView = UIVisualEffectView(effect: blurEffect)
         blurView.frame = view.frame
         blurView.layer.zPosition = 1
         
         table.layer.zPosition = 0
-        
-        addRecordViewHeightAnchor = addRecordView.heightAnchor.constraint(equalToConstant: view.frame.height * 0.6)
-        addRecordViewCenterYAnchor = addRecordView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        addRecordViewCenterXAnchor = addRecordView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        addRecordButton.addTarget(self, action: #selector(addRecordButtonTapped), for: .touchUpInside)
+        addRecordButton.addTarget(self, action: #selector(addRecordButtonTapped(_:)), for: .touchUpInside)
         
         table.reloadData()
         
     }
     
     @objc func addRecordButtonTapped(_ sender: UIButton) {
-        view.addSubview(addRecordView)
-        addRecordView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            addRecordView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            addRecordViewHeightAnchor!,
-            addRecordViewCenterYAnchor!,
-            addRecordViewCenterXAnchor!
-        ])
+        self.addRecordView = AddRecordView()
+        self.addRecordView?.delegate = self
         
+        self.addRecordView!.alpha = 1.0
+        view.addSubview(self.addRecordView!)
+        self.addRecordView!.frame.size.width = view.frame.width * 0.9
+        self.addRecordView!.frame.size.height = view.frame.height * 0.6
+        addRecordViewCenter = view.center
+        self.addRecordView!.center = addRecordViewCenter!
     }
     
     

@@ -11,93 +11,64 @@ import MapKit
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {   // Number of Secions
-        return records_2d.count
+        return model.data.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return model.data[section].count
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return DateHeader(text: dates[section])
+        return DateHeader(text: model.dates[section])
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 30
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return records_2d[section].count
-    }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if let ind = indexPathOfSelectedRecord {
-//            if ind == indexPath {
-//                return 400
-//            }
-//        }
-        
         return 90
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TableViewIds.recordViewCell.rawValue, for: indexPath) as! RecordViewTableCell
-
-        let recordView = RecordView(record: records_2d[indexPath.section][indexPath.row], isSquishable: true)
-        
-//
-        cell.contentView.addSubview(recordView)
-        recordView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            recordView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - 20),
-            recordView.centerXAnchor.constraint(equalTo: cell.centerXAnchor),
-            recordView.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
-            recordView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10)
-        ])
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tap_recordView))
+        let record = self.model.data[indexPath.section][indexPath.row]
+        cell.configure(record: record, recordsTable: tableView, indexPath: indexPath)
+        cell.delegate = self
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.tap_recordView(_:)))
         cell.addGestureRecognizer(tap)
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        cell.recordView!.addInteraction(interaction)
+        
+        
         
         return cell
     }
     
     
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        performAnimation(indexPath: indexPath)
         let cell = table.cellForRow(at: indexPath) as! RecordViewTableCell
-        cell.contentView.clipsToBounds = false
-        cell.contentView.subviews.first?.clipsToBounds = false
-        cell.contentView.subviews.first?.frame = (cell.contentView.subviews.first?.frame.offsetBy(dx: 0, dy: 10))!
+        let recordView = cell.recordView!
+        recordView.translatesAutoresizingMaskIntoConstraints = true
+        recordView.frame = tableView.rectForRow(at: indexPath)
+        recordView.frame.size.width -= 20
+        recordView.frame.size.height -= 20
+        recordView.frame = recordView.frame.offsetBy(dx: 10, dy: 10)
+        recordView.frame = table.convert(recordView.frame, to: view)
+        recordView.layer.zPosition = 1000
         
+        view.addSubview(blurView)
+        view.addSubview(recordView)
         
-//        table.beginUpdates()
-//        tableView.setNeedsLayout()
-        
-//        table.endUpdates()
-//        cell.frame = cell.frame.offsetBy(dx: 0, dy: cellFrame.minY - view.frame.height)
-//        tableView.beginUpdates()
-//        cell.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            cell.bottomAnchor.constraint(equalTo: table.bottomAnchor, constant: 400),
-//            cell.heightAnchor.constraint(equalToConstant: 400),
-//            cell.widthAnchor.constraint(equalTo: table.widthAnchor),
-//            cell.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-//        ])
-        
-//        tableView.setNeedsLayout()
-//        tableView.endUpdates()
-        
-//        print(cell, cell.superview, cell.superview?.superview)
-//        cell.layer.zPosition = 1000
-        
-//        cell.removeConstraints(cell.constraints)
-//        cell.clipsToBounds = false
-//        NSLayoutConstraint.activate([
-//            cell.bottomAnchor.constraint(equalTo: table.bottomAnchor, constant: 400),
-//            cell.heightAnchor.constraint(equalToConstant: 400),
-//            cell.widthAnchor.constraint(equalTo: table.widthAnchor)
-//        ])
-        
-        
-        
-        
+        blurView.alpha = 0.0
+        blurView.layer.zPosition = 999
+        recordView.isSquishable = false
+        recordView.expand()
+        recordView.isUserInteractionEnabled = true
+        UIView.animate(withDuration: 0.4) {
+            self.blurView.alpha = 1.0
+        }
         
     }
     
@@ -162,162 +133,59 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return true
     }
     
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, sourceView, completionHandler) in
-            print("index path of delete: \(indexPath)")
-            self.context.delete(self.records_2d[indexPath.section][indexPath.row])
-            
-            do {
-                try self.context.save()
-            } catch {
-                fatalError("Could not delete")
+            action.backgroundColor = .red
+            self.model.delete(at: indexPath) {
+                self.removeRecordFromTable(indexPath)
             }
-            
-            self.records_2d[indexPath.section].remove(at: indexPath.row)
-            if self.records_2d[indexPath.section].isEmpty { self.records_2d.remove(at: indexPath.section) }
-            UIView.transition(with: self.table,
-                              duration: 0.35,
-                              options: [.preferredFramesPerSecond60, .transitionCrossDissolve, .curveEaseInOut],
-                              animations: {
-                                self.table.reloadData()
-
-                              })
             
             completionHandler(true)
             
         }
-
+        
         delete.image = UIImage(systemName: "trash")!.withTintColor(.red, renderingMode: .alwaysOriginal)
         delete.title = nil
         delete.backgroundColor = .white
         
-        
-        let rename = UIContextualAction(style: .normal, title: "Edit") { (action, sourceView, completionHandler) in
-            print("index path of edit: \(indexPath)")
-            completionHandler(true)
-        }
-        let swipeActionConfig = UISwipeActionsConfiguration(actions: [rename, delete])
-        swipeActionConfig.performsFirstActionWithFullSwipe = false
+        let swipeActionConfig = UISwipeActionsConfiguration(actions: [delete])
+        swipeActionConfig.performsFirstActionWithFullSwipe = true
         return swipeActionConfig
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            
-            context.delete(records_2d[indexPath.section][indexPath.row])
-            
-            do {
-                try context.save()
-            } catch {
-                fatalError("Could not delete")
-            }
-            
-            records_2d[indexPath.section].remove(at: indexPath.row)
-            if records_2d[indexPath.section].isEmpty { records_2d.remove(at: indexPath.section) }
-            UIView.transition(with: table,
-                              duration: 0.35,
-                              options: [.preferredFramesPerSecond60, .transitionCrossDissolve, .curveEaseInOut],
-                              animations: {
-                                self.table.reloadData()
-
-                              })
-            
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let rename = UIContextualAction(style: .normal, title: "Edit") { (action, sourceView, completionHandler) in
+            action.backgroundColor = .red
+            print("index path of edit: \(indexPath)")
+            completionHandler(true)
         }
+        
+        rename.image = UIImage(systemName: "square.and.pencil")!.withTintColor(.systemPurple, renderingMode: .alwaysOriginal)
+        rename.title = nil
+        rename.backgroundColor = .white
+        
+        let swipeActionConfig = UISwipeActionsConfiguration(actions: [rename])
+        swipeActionConfig.performsFirstActionWithFullSwipe = true
+        return swipeActionConfig
     }
     
-    func performAnimation(indexPath: IndexPath) {
-        let cell = table.cellForRow(at: indexPath) as! RecordViewTableCell
-        var cellFrame = cell.frame.offsetBy(dx: 10, dy: 0)
-        cellFrame.size.width -= 20
-        let rect = table.convert(cellFrame, to: table.superview)
-        cell.alpha = 0.0
-
-        view.addSubview(blurView)
-        blurView.alpha = 0.0
-        
-        let record = data[indexPath.item]
-        let recordView = RecordView(record: record)
-        view.addSubview(recordView)
-        recordView.layer.zPosition = 3
-
-        self.recordViewHeightAnchor = recordView.heightAnchor.constraint(equalToConstant: rect.height)
-        self.recordViewYCenter = recordView.centerYAnchor.constraint(equalTo: self.view.topAnchor, constant: rect.midY)
-
-
-        let map = MKMapView()
-        recordView.addSubview(map)
-        map.layer.cornerRadius = 25
-        map.layer.borderWidth = 1
-        map.alpha = 0.0
-        map.layer.borderColor = UIColor.black.withAlphaComponent(0.3).cgColor
-        map.isScrollEnabled = false
-        map.translatesAutoresizingMaskIntoConstraints = false
-        self.mapHeightAnchor = map.heightAnchor.constraint(equalToConstant: 0)
-        self.mapTopAnchor = map.topAnchor.constraint(equalTo: recordView.subviews[0].bottomAnchor, constant: 10)
-
-        let topMenuStack = UIStackView()
-        topMenuStack.alpha = 0.0
-        recordView.addSubview(topMenuStack)
-        topMenuStack.axis = .horizontal
-        topMenuStack.translatesAutoresizingMaskIntoConstraints = false
-        self.topMenuStackHeightAnchor = topMenuStack.heightAnchor.constraint(equalToConstant: 0)
-        self.topMenuStackTopAnchor = topMenuStack.topAnchor.constraint(equalTo: recordView.topAnchor, constant: 10)
-
-        let dateLabel = UILabel()
-        dateLabel.text = record.date?.getDayExpExp()
-        dateLabel.font = UIFont(name: "Avenir", size: 19)!
-        topMenuStack.addArrangedSubview(dateLabel)
-
-        let closeButton = UIButton()
-        closeButton.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
-        closeButton.frame.size = CGSize(width: 30, height: 30)
-        closeButton.tintColor = UIColor.black.withAlphaComponent(0.3)
-        closeButton.addTarget(self, action: #selector(closeTap_recordView), for: .touchUpInside)
-        topMenuStack.addArrangedSubview(closeButton)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.trailingAnchor.constraint(equalTo: topMenuStack.trailingAnchor).isActive = true
-        closeButton.heightAnchor.constraint(equalTo: topMenuStack.heightAnchor).isActive = true
-
-        recordView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            recordView.widthAnchor.constraint(equalToConstant: rect.width),
-            recordView.centerXAnchor.constraint(equalTo: cell.centerXAnchor),
-            self.recordViewYCenter!,
-            self.recordViewHeightAnchor!,
-
-            recordView.subviews[0].topAnchor.constraint(equalTo: topMenuStack.bottomAnchor),
-
-            map.leadingAnchor.constraint(equalTo: recordView.leadingAnchor, constant: 10),
-            map.trailingAnchor.constraint(equalTo: recordView.trailingAnchor, constant: -10),
-            self.mapTopAnchor!,
-            self.mapHeightAnchor!,
-
-            topMenuStack.leadingAnchor.constraint(equalTo: recordView.leadingAnchor, constant: 10),
-            topMenuStack.trailingAnchor.constraint(equalTo: recordView.trailingAnchor, constant: -10),
-            self.topMenuStackTopAnchor!,
-            self.topMenuStackHeightAnchor!
-        ])
-
-        self.view.layoutIfNeeded()
-
-        recordViewHeightAnchor!.constant   = 400
-        recordViewYCenter!.constant        = self.view.frame.midY
-        mapHeightAnchor!.constant          = 240
-        topMenuStackHeightAnchor!.constant = 30
-        recordView.hStackYCenter           = nil
-
-        let animator = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 0.8) {
-            self.blurView.alpha = 1.0
-            self.view.layoutIfNeeded()
+    func removeRecordFromTable(_ indexPath: IndexPath) {
+        if self.model.data[0].count == 0 {
+            if self.model.data[indexPath.section].isEmpty {
+                self.model.data.remove(at: indexPath.section)
+                self.model.dates.remove(at: indexPath.section)
+            }
+            self.table.deleteSections(IndexSet(indexPath.section...indexPath.section), with: .fade)
+            
+        } else {
+            self.table.deleteRows(at: [indexPath], with: .left)
         }
-
-        animator.addAnimations({
-            map.alpha = 1.0
-            topMenuStack.alpha = 1.0
-        }, delayFactor: 0.1)
-
-        animator.startAnimation()
     }
     
 }
