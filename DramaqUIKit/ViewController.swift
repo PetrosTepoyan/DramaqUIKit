@@ -37,7 +37,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var table: UITableView!
     @IBOutlet weak var addRecordButton: UIButton!
     var indexPathOfSelectedRecord: IndexPath?
-    let blurEffect = UIBlurEffect(style: .light)
+    let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)
     
     var recordViewHeightAnchor: NSLayoutConstraint?
     var recordViewYCenter: NSLayoutConstraint?
@@ -53,6 +53,10 @@ class ViewController: UIViewController {
     
     var blurView: UIVisualEffectView!
     
+    weak var recordViewScrollingDelegate: RecordViewScrollingDelegate?
+    
+    weak var cellToReconfigure: RecordViewTableCell?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         table.delegate = self
@@ -64,6 +68,8 @@ class ViewController: UIViewController {
         self.blurView = UIVisualEffectView(effect: blurEffect)
         blurView.frame = view.frame
         blurView.layer.zPosition = 1
+        view.addSubview(blurView)
+        blurView.alpha = 0.0
         
         table.layer.zPosition = 0
         addRecordButton.addTarget(self, action: #selector(addRecordButtonTapped(_:)), for: .touchUpInside)
@@ -72,16 +78,30 @@ class ViewController: UIViewController {
         
     }
     
+    func toggleBlurView() {
+        blurView.alpha = blurView.alpha == 0.0 ? 1.0 : 0.0
+    }
+    
     @objc func addRecordButtonTapped(_ sender: UIButton) {
         self.addRecordView = AddRecordView()
         self.addRecordView?.delegate = self
         
-        self.addRecordView!.alpha = 1.0
+        self.addRecordView!.alpha = 0.0
         view.addSubview(self.addRecordView!)
         self.addRecordView!.frame.size.width = view.frame.width * 0.9
         self.addRecordView!.frame.size.height = view.frame.height * 0.6
         addRecordViewCenter = view.center
         self.addRecordView!.center = addRecordViewCenter!
+        self.addRecordView?.layer.zPosition = 3
+        let animator = AnimationPatterns.addRecordView
+        
+        animator.addAnimations {
+            self.addRecordView!.alpha = 1.0
+            self.toggleBlurView()
+        }
+        
+        animator.startAnimation()
+        
     }
     
     

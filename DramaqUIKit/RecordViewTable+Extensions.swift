@@ -57,23 +57,20 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         recordView.frame = recordView.frame.offsetBy(dx: 10, dy: 10)
         recordView.frame = table.convert(recordView.frame, to: view)
         recordView.layer.zPosition = 1000
-        
-        view.addSubview(blurView)
+        recordViewScrollingDelegate = recordView
         view.addSubview(recordView)
         
-        blurView.alpha = 0.0
-        blurView.layer.zPosition = 999
         recordView.isSquishable = false
         recordView.expand()
         recordView.isUserInteractionEnabled = true
         UIView.animate(withDuration: 0.4) {
-            self.blurView.alpha = 1.0
+            self.toggleBlurView()
         }
         
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.transform = CGAffineTransform(scaleX: 0.88, y: 0.88)
+        cell.transform = CGAffineTransform(scaleX: 0.93, y: 0.93)
         UIView.animate(withDuration: 0.3) {
             cell.transform = CGAffineTransform.identity
         }
@@ -85,49 +82,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         indexPathOfSelectedRecord = indexPath
         tableView(table, didSelectRowAt: indexPath!)
     }
-    
-    @objc func closeTap_recordView(_ sender: UITapGestureRecognizer) {
-        guard let indexPath = indexPathOfSelectedRecord else { return }
-        
-        let cell = table.cellForRow(at: indexPath)
-        var cellFrame = cell!.frame.offsetBy(dx: 10, dy: 10)
-        cellFrame.size.width -= 20
-        cellFrame.size.height -= 20
-        let rect = table.convert(cellFrame, to: table.superview)
-        
-        indexPathOfSelectedRecord = nil
-        
-        self.recordViewHeightAnchor?.constant = rect.height
-        self.recordViewYCenter?.constant = rect.midY
-        self.mapHeightAnchor?.constant = 0
-        self.topMenuStackHeightAnchor?.constant = 0
-        self.mapTopAnchor?.constant = 0
-        self.topMenuStackTopAnchor?.constant = 5
-        
-        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.3, options: []) {
-            self.view.layoutIfNeeded()
-            (self.mapHeightAnchor?.firstItem as? MKMapView)?.alpha = 0.0
-            (self.topMenuStackHeightAnchor?.firstItem as? UIStackView)?.alpha = 0.0
-            self.blurView.alpha = 0.0
-        }
-        
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.58) {
-            self.view.willRemoveSubview(self.view.subviews.last!)
-            self.view.subviews.last!.removeFromSuperview()
-            
-            self.view.willRemoveSubview(self.blurView)
-            self.blurView.removeFromSuperview()
-            
-            self.view.reloadInputViews()
-            let cell = self.table.cellForRow(at: indexPath)
-            cell!.alpha = 1.0
-            self.table.updateFocusIfNeeded()
-            
-        }
-        
-        
-    }
+
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true

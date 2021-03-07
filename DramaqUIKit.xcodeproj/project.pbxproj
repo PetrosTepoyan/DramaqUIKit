@@ -19,6 +19,7 @@
 		150F707D25A268F4007D9A6E /* DateHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150F707C25A268F4007D9A6E /* DateHeader.swift */; };
 		150F708225A27063007D9A6E /* RecordViewTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150F708125A27063007D9A6E /* RecordViewTableCell.swift */; };
 		150F708725A284CD007D9A6E /* AddRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150F708625A284CD007D9A6E /* AddRecordView.swift */; };
+		152344F125F4E380002DC42B /* RecordViewTable+ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152344F025F4E380002DC42B /* RecordViewTable+ScrollView.swift */; };
 		15234D9925A9D02800A64FA3 /* AnimationPatterns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15234D9825A9D02800A64FA3 /* AnimationPatterns.swift */; };
 		15234DAA25A9FFFF00A64FA3 /* DateSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15234DA925A9FFFF00A64FA3 /* DateSetup.swift */; };
 		15234DBB25AA28C400A64FA3 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15234DBA25AA28C300A64FA3 /* CategoryView.swift */; };
@@ -30,6 +31,8 @@
 		156E947725A7F221004CAD57 /* ViewController+Contex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E947625A7F221004CAD57 /* ViewController+Contex.swift */; };
 		156E947C25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E947B25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift */; };
 		156E948125A8AE31004CAD57 /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156E948025A8AE31004CAD57 /* Double+Extensions.swift */; };
+		15A9202225AA77D70028AFC7 /* MagicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A9202125AA77D70028AFC7 /* MagicView.swift */; };
+		15C5F2AD25F2EE8300E17F48 /* AddRecordViewTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C5F2AC25F2EE8300E17F48 /* AddRecordViewTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +71,7 @@
 		150F707C25A268F4007D9A6E /* DateHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHeader.swift; sourceTree = "<group>"; };
 		150F708125A27063007D9A6E /* RecordViewTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewTableCell.swift; sourceTree = "<group>"; };
 		150F708625A284CD007D9A6E /* AddRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordView.swift; sourceTree = "<group>"; };
+		152344F025F4E380002DC42B /* RecordViewTable+ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecordViewTable+ScrollView.swift"; sourceTree = "<group>"; };
 		15234D9825A9D02800A64FA3 /* AnimationPatterns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationPatterns.swift; sourceTree = "<group>"; };
 		15234DA925A9FFFF00A64FA3 /* DateSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateSetup.swift; sourceTree = "<group>"; };
 		15234DBA25AA28C300A64FA3 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
@@ -79,6 +83,8 @@
 		156E947625A7F221004CAD57 /* ViewController+Contex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Contex.swift"; sourceTree = "<group>"; };
 		156E947B25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extension.swift"; sourceTree = "<group>"; };
 		156E948025A8AE31004CAD57 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
+		15A9202125AA77D70028AFC7 /* MagicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicView.swift; sourceTree = "<group>"; };
+		15C5F2AC25F2EE8300E17F48 /* AddRecordViewTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecordViewTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,15 +138,17 @@
 				15234D9825A9D02800A64FA3 /* AnimationPatterns.swift */,
 				156E948025A8AE31004CAD57 /* Double+Extensions.swift */,
 				156E947B25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift */,
+				15A9202125AA77D70028AFC7 /* MagicView.swift */,
 				156E947125A7694B004CAD57 /* RecordsModel.swift */,
 				156E947625A7F221004CAD57 /* ViewController+Contex.swift */,
-				153891B625A50E26008AD50C /* ViewController+Extensions.swift */,
 				1503A60E2592ABB900BBAB1C /* ViewController.swift */,
+				153891B625A50E26008AD50C /* ViewController+Extensions.swift */,
 				154F07C525A2A21E00A13CD0 /* RecordViewTable+Extensions.swift */,
+				152344F025F4E380002DC42B /* RecordViewTable+ScrollView.swift */,
 				154B26E6259927ED00D6C4FB /* RecordView.swift */,
 				15234DBA25AA28C300A64FA3 /* CategoryView.swift */,
 				15234DA925A9FFFF00A64FA3 /* DateSetup.swift */,
-				150F708625A284CD007D9A6E /* AddRecordView.swift */,
+				15C5F2B125F2EFD800E17F48 /* AddRecordView */,
 				1558A329259F887300EF8E5E /* RecordViewLabel.swift */,
 				150F708125A27063007D9A6E /* RecordViewTableCell.swift */,
 				150F707C25A268F4007D9A6E /* DateHeader.swift */,
@@ -171,6 +179,15 @@
 				1503A6312592ABBE00BBAB1C /* Info.plist */,
 			);
 			path = DramaqUIKitUITests;
+			sourceTree = "<group>";
+		};
+		15C5F2B125F2EFD800E17F48 /* AddRecordView */ = {
+			isa = PBXGroup;
+			children = (
+				150F708625A284CD007D9A6E /* AddRecordView.swift */,
+				15C5F2AC25F2EE8300E17F48 /* AddRecordViewTextField.swift */,
+			);
+			path = AddRecordView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -303,18 +320,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15A9202225AA77D70028AFC7 /* MagicView.swift in Sources */,
 				1503A6152592ABB900BBAB1C /* DramaqUIKit.xcdatamodeld in Sources */,
 				15234DAA25A9FFFF00A64FA3 /* DateSetup.swift in Sources */,
 				156E947C25A87B4B004CAD57 /* NSLayoutConstraint+Extension.swift in Sources */,
 				156E947225A7694B004CAD57 /* RecordsModel.swift in Sources */,
 				154F07C625A2A21E00A13CD0 /* RecordViewTable+Extensions.swift in Sources */,
 				15234DBB25AA28C400A64FA3 /* CategoryView.swift in Sources */,
+				15C5F2AD25F2EE8300E17F48 /* AddRecordViewTextField.swift in Sources */,
 				1503A60F2592ABB900BBAB1C /* ViewController.swift in Sources */,
 				156E948125A8AE31004CAD57 /* Double+Extensions.swift in Sources */,
 				150F708725A284CD007D9A6E /* AddRecordView.swift in Sources */,
 				154B26E7259927ED00D6C4FB /* RecordView.swift in Sources */,
 				15234D9925A9D02800A64FA3 /* AnimationPatterns.swift in Sources */,
 				153891B725A50E26008AD50C /* ViewController+Extensions.swift in Sources */,
+				152344F125F4E380002DC42B /* RecordViewTable+ScrollView.swift in Sources */,
 				150F708225A27063007D9A6E /* RecordViewTableCell.swift in Sources */,
 				150F707D25A268F4007D9A6E /* DateHeader.swift in Sources */,
 				1503A60B2592ABB900BBAB1C /* AppDelegate.swift in Sources */,

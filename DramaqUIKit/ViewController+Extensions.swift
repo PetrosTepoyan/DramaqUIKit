@@ -10,6 +10,29 @@ import UIKit
 
 extension ViewController: AddRecordViewDelegate, RecordViewTableCellDelegate, RecordViewAnimationDelegate {
     
+    func animateTransition(recordToPass: Record) {
+        if model.data.count != 0 {
+            table.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        }
+        
+        model.add(record: recordToPass)
+        
+        if model.data[0].count == 1 { // means that the record with new date has just been added
+            table.insertSections(IndexSet(0...0), with: .bottom)
+            
+        } else {
+            table.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
+        }
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))
+        cell?.alpha = 0.0
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + AnimationPatterns.recordView.duration + AnimationPatterns.delta) {
+            cell?.alpha = 1.0
+        }
+    }
+    
+    
+    
     func getRectForCell(indexPath: IndexPath) -> CGRect {
         return table.rectForRow(at: indexPath)
     }
@@ -26,11 +49,12 @@ extension ViewController: AddRecordViewDelegate, RecordViewTableCellDelegate, Re
         recordViewFrame = table.convert(recordViewFrame, to: view)
         
         self.addRecordView!.frame.size.height = 70
-        let animator = AnimationPatterns.removeAddRecordView
+        let animator = AnimationPatterns.addRecordView
         
         animator.addAnimations {
             self.addRecordView!.center.y = recordViewFrame.midY
             self.addRecordView!.center.x = recordViewFrame.midX
+            self.toggleBlurView()
         }
         
         animator.addCompletion { (position) in
@@ -44,27 +68,29 @@ extension ViewController: AddRecordViewDelegate, RecordViewTableCellDelegate, Re
     }
     
     func reconfigureCell(record: Record) {
+//        recordViewScrollingDelegate
+        cellToReconfigure = table.cellForRow(at: indexPathOfSelectedRecord!) as? RecordViewTableCell
+        cellToReconfigure!.recordView = nil
+        cellToReconfigure!.configure(record: record, recordsTable: table, indexPath: indexPathOfSelectedRecord!)
+        cellToReconfigure!.alpha = 0.0
         
-        weak var cell = table.cellForRow(at: indexPathOfSelectedRecord!) as? RecordViewTableCell
-        cell!.recordView = nil
-        cell!.configure(record: record, recordsTable: table, indexPath: indexPathOfSelectedRecord!)
-        cell!.alpha = 0.0
-        let animator = AnimationPatterns.addBlurView
-        animator.addAnimations {
-            self.blurView.alpha = 0.0
+        let blurAnimator = AnimationPatterns.addBlurView
+        blurAnimator.addAnimations {
+            self.toggleBlurView()
         }
-        animator.addCompletion { _ in
-            self.blurView.removeFromSuperview()
-        }
-        
-        animator.startAnimation()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            cell!.alpha = 1.0
-            
-        }
+        blurAnimator.startAnimation()
         
         
     }
+    
+    func passRecordViewAnimator(rvAnimator: UIViewPropertyAnimator) {
+        rvAnimator.addCompletion { (position) in
+            if position == .end {
+                self.cellToReconfigure!.alpha = 1.0
+            }
+        }
+    }
+    
+    
     
 }

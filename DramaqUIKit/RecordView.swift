@@ -11,6 +11,8 @@ import MapKit
 
 protocol RecordViewAnimationDelegate: class {
     func reconfigureCell(record: Record)
+    
+    func passRecordViewAnimator(rvAnimator: UIViewPropertyAnimator)
 }
 
 open class RecordView: UIView {
@@ -32,12 +34,13 @@ open class RecordView: UIView {
     
     var hStackYCenter: NSLayoutConstraint!
     var hStackTopAnchor: NSLayoutConstraint!
-    var scrollViewHeightAnchor: NSLayoutConstraint!
     var scrollViewTopAnchor: NSLayoutConstraint!
     var topMenuStackHeightAnchor: NSLayoutConstraint!
     var topMenuStackTopAnchor: NSLayoutConstraint!
     
     var isSquishable: Bool = false
+    
+    var yOffsetWhenScrolling: CGFloat?
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -51,7 +54,6 @@ open class RecordView: UIView {
         map.layer.borderWidth = 1
         map.alpha = 0.0
         map.layer.borderColor = UIColor.black.withAlphaComponent(0.3).cgColor
-        //        map.isScrollEnabled = false
         map.translatesAutoresizingMaskIntoConstraints = false
         map.delegate = self
         let point = MKPointAnnotation()
@@ -63,6 +65,7 @@ open class RecordView: UIView {
         map.region.span.longitudeDelta = 0.05
         return map
     }()
+    
     lazy var topMenuStack: UIStackView = {
         let topMenuStack = UIStackView()
         topMenuStack.alpha = 0.0
@@ -70,12 +73,14 @@ open class RecordView: UIView {
         topMenuStack.translatesAutoresizingMaskIntoConstraints = false
         return topMenuStack
     }()
+    
     lazy var dateLabel: UILabel = {
         let dateLabel = UILabel()
         dateLabel.text = record!.date?.getDayExpExp()
         dateLabel.font = UIFont(name: "Avenir", size: 19)!
         return dateLabel
     }()
+    
     lazy var closeButton: UIButton = {
         let closeButton = UIButton()
         
@@ -86,9 +91,9 @@ open class RecordView: UIView {
         closeButton.frame.size = CGSize(width: 30, height: 30)
         closeButton.tintColor = UIColor.black.withAlphaComponent(0.3)
         closeButton.addTarget(self, action: #selector(collapse), for: .touchUpInside)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
         return closeButton
     }()
+    
     lazy var animator: UIViewPropertyAnimator = {
         let animator = AnimationPatterns.recordView
         animator.addAnimations {
@@ -136,10 +141,13 @@ open class RecordView: UIView {
         hStackYCenter = self.hStack.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         hStackYCenter.priority = UILayoutPriority(rawValue: 999)
         
+        let hStackHeightAnchor = hStack.heightAnchor.constraint(equalToConstant: 60)
+        hStackHeightAnchor.priority = UILayoutPriority(rawValue: 999)
+        
         NSLayoutConstraint.activate([
             hStack.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             hStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
-            hStack.heightAnchor.constraint(equalToConstant: 60),
+            hStackHeightAnchor,
             hStackYCenter
         ])
     }
@@ -150,32 +158,31 @@ open class RecordView: UIView {
         self.state = .expanded
         self.initialFrame = self.frame
         
-        
         self.addSubview(scrollView)
         scrollView.addSubview(map)
+        
         self.addSubview(topMenuStack)
         
-        self.scrollViewHeightAnchor = scrollView.heightAnchor.constraint(equalToConstant: 0)
         self.scrollViewTopAnchor = scrollView.topAnchor.constraint(equalTo: hStack.bottomAnchor)
         
         self.topMenuStackHeightAnchor = topMenuStack.heightAnchor.constraint(equalToConstant: 0)
-        self.topMenuStackTopAnchor = topMenuStack.topAnchor.constraint(equalTo: self.topAnchor)
+        self.topMenuStackTopAnchor = topMenuStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 0)
         
         topMenuStack.addArrangedSubview(dateLabel)
         topMenuStack.addArrangedSubview(closeButton)
         
-        hStackTopAnchor = hStack.topAnchor.constraint(equalTo: topMenuStack.bottomAnchor, constant: 0)
+        hStackTopAnchor = hStack.topAnchor.constraint(equalTo: topMenuStack.bottomAnchor, constant: 5)
         
         NSLayoutConstraint.activate([
-            map.centerXAnchor.constraint(equalTo: hStack.centerXAnchor),
-            map.widthAnchor.constraint(equalTo: hStack.widthAnchor),
-            map.heightAnchor.constraint(equalToConstant: 240),
-            map.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            
             scrollView.widthAnchor.constraint(equalTo: hStack.widthAnchor),
             scrollView.centerXAnchor.constraint(equalTo: hStack.centerXAnchor),
-            self.scrollViewTopAnchor!,
-            self.scrollViewHeightAnchor!,
+            scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.scrollViewTopAnchor,
+            
+            map.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            map.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            map.heightAnchor.constraint(equalToConstant: 240),
+            map.topAnchor.constraint(equalTo: scrollView.topAnchor),
             
             topMenuStack.centerXAnchor.constraint(equalTo: hStack.centerXAnchor),
             topMenuStack.widthAnchor.constraint(equalTo: hStack.widthAnchor),
@@ -187,23 +194,23 @@ open class RecordView: UIView {
         
         self.layoutIfNeeded()
         
-        hStackTopAnchor!.constant          = 10
-        scrollViewTopAnchor!.constant             = 10
         topMenuStackTopAnchor!.constant    = 10
         topMenuStackHeightAnchor!.constant = 30
-        scrollViewHeightAnchor!.constant          = 240
+        hStackTopAnchor!.constant          = 10
+        scrollViewTopAnchor!.constant      = 10
         
-        
+
         animator.addAnimations {
             self.frame.size.height = 400
             self.center = self.superview!.center
+            self.layoutIfNeeded()
         }
-        
+
         animator.addAnimations({
             self.map.alpha = 1.0
             self.topMenuStack.alpha = 1.0
         }, delayFactor: 0.1)
-        
+
         animator.startAnimation()
     }
     
@@ -212,9 +219,8 @@ open class RecordView: UIView {
         
         animator.addAnimations {
             self.hStackTopAnchor!.constant          = 5
-            self.scrollViewTopAnchor!.constant             = 0
+            self.scrollViewTopAnchor!.constant      = 0
             self.topMenuStackTopAnchor!.constant    = 0
-            self.scrollViewHeightAnchor!.constant          = 0
             self.topMenuStackHeightAnchor!.constant = 0
             
             self.frame = self.initialFrame!
@@ -222,23 +228,27 @@ open class RecordView: UIView {
             self.map.alpha = 0.0
             self.layoutIfNeeded()
         }
+        
+        animator.addAnimations {
+            self.frame = self.frame.offsetBy(dx: 0, dy: self.yOffsetWhenScrolling ?? 0)
+        }
+        
+        self.delegate?.passRecordViewAnimator(rvAnimator: animator)
+        
+        animator.addCompletion { (position) in
+            if position == .end {
+                self.map.removeFromSuperview()
+                self.topMenuStack.removeFromSuperview()
+                self.removeFromSuperview()
+            }
+        }
+        
         animator.startAnimation()
         
         guard let record = self.record else { return }
         self.delegate?.reconfigureCell(record: record)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + animator.duration - 0.05) {
-            self.map.removeFromSuperview()
-            self.topMenuStack.removeFromSuperview()
-            self.removeFromSuperview()
-            
-        }
-        
     }
-    
-    //    deinit {
-    //        print("Deinit")
-    //    }
     
     
 }
@@ -266,6 +276,21 @@ extension RecordView {
                 self.transform = transform
             }
         }
+    }
+    
+    open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isSquishable {
+            let transform = CGAffineTransform(scaleX: 1, y: 1)
+            UIView.animate(withDuration: 0.15) {
+                self.transform = transform
+            }
+        }
+    }
+}
+
+extension RecordView: RecordViewScrollingDelegate {
+    func passYOffsetWhenScrolling(yOffset: CGFloat) {
+        yOffsetWhenScrolling = yOffset
     }
 }
 

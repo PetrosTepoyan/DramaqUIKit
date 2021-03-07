@@ -23,6 +23,15 @@ enum Category: String, CaseIterable{
     case Beauty
     
     case Unknown
+    
+    func color_() -> Color {
+        return Color(self.rawValue)
+    }
+    
+    func color() -> UIColor {
+        return UIColor(named: self.rawValue)!
+    }
+    
 }
 
 struct CategoryView: View {

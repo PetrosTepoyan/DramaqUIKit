@@ -11,17 +11,19 @@ import CoreData
 
 protocol AddRecordViewDelegate: class {
     func didFinish()
+    func animateTransition(recordToPass: Record)
 }
 
 class AddRecordView: UIView {
-    let priceTF = UITextField()
-    let placeTF = UITextField()
+    let priceTF = AddRecordViewTextField()
+    let placeTF = AddRecordViewTextField()
     let draggableLabel = UILabel()
     let contentView = UIView()
     var recordView: RecordView!
     var startingPoint: CGPoint = CGPoint(x: 0, y: 0)
     var record: Record? = nil
     var contentViewBottomAnchor: NSLayoutConstraint?
+    var home: ViewController!
     
     weak var delegate: AddRecordViewDelegate?
     
@@ -56,12 +58,12 @@ class AddRecordView: UIView {
             priceTF.topAnchor.constraint(equalTo: draggableLabel.bottomAnchor, constant: 30),
             priceTF.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             priceTF.widthAnchor.constraint(equalToConstant: 300),
-            priceTF.heightAnchor.constraint(equalToConstant: 80),
+            priceTF.heightAnchor.constraint(equalToConstant: 60),
             
             placeTF.topAnchor.constraint(equalTo: priceTF.bottomAnchor, constant: 30),
             placeTF.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             placeTF.widthAnchor.constraint(equalToConstant: 300),
-            placeTF.heightAnchor.constraint(equalToConstant: 80)
+            placeTF.heightAnchor.constraint(equalToConstant: 60)
         ])
         
         contentViewBottomAnchor = contentView.bottomAnchor.constraint(equalTo: draggableLabel.bottomAnchor, constant: 400)
@@ -78,9 +80,6 @@ class AddRecordView: UIView {
         draggableLabel.font = UIFont.preferredFont(forTextStyle: .title1)
         draggableLabel.textAlignment = .center
         
-        priceTF.layer.cornerRadius = 15
-        placeTF.layer.cornerRadius = 15
-        
         priceTF.placeholder = "price"
         placeTF.placeholder = "place"
         
@@ -89,8 +88,10 @@ class AddRecordView: UIView {
     
     
     
+    
+    
     @objc func panGesture(_ sender: UIPanGestureRecognizer) {
-        let home = sender.view?.superview?.parentViewController as! ViewController
+        home = (sender.view?.superview?.parentViewController as! ViewController)
         let translation = sender.translation(in: self)
         let draggableLabelBounds = draggableLabel
             .frame
@@ -103,10 +104,7 @@ class AddRecordView: UIView {
             self.startingPoint = home.addRecordViewCenter!
             
         case .changed:
-            UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.67) {
-                self.center.x = self.startingPoint.x + translation.x
-                self.center.y = self.startingPoint.y + translation.y
-            }.startAnimation()
+            dragGestureAnimation(translation).startAnimation()
             
             if home.addRecordSuccessFrame.intersects(draggableLabelBounds) {
                 
@@ -120,18 +118,8 @@ class AddRecordView: UIView {
                     record!.category = Category.allCases.randomElement()!.rawValue
                     record!.purchaseMethod = "Card"
                     
-                    recordView = RecordView(record: record!)
-                    recordView.translatesAutoresizingMaskIntoConstraints = false
-                    recordView.alpha = 0.0
-                    recordView.layer.zPosition = draggableLabel.layer.zPosition + 1
-                    self.addSubview(recordView)
-                    NSLayoutConstraint.activate([
-                        recordView.widthAnchor.constraint(equalTo: home.table.widthAnchor, constant: -20),
-                        recordView.heightAnchor.constraint(equalToConstant: 70),
-                        recordView.centerYAnchor.constraint(equalTo: draggableLabel.centerYAnchor),
-                        recordView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
-                    ])
-                    superview?.layoutIfNeeded()
+                    setupRecordViewWhenAboutToAdd(homeController: home)
+                    
                 }
                 
                 UIView.animate(withDuration: 0.5) { [self] in
@@ -146,7 +134,6 @@ class AddRecordView: UIView {
             if !home.addRecordDismissFrame.intersects(draggableLabelBounds) &&
                 !home.addRecordSuccessFrame.intersects(draggableLabelBounds) {
                 UIView.animate(withDuration: 0.5) { [self] in
-//                    contentViewBottomAnchor?.constant = 400
                     recordView?.alpha = 0.0
                     priceTF.alpha = 1.0
                     placeTF.alpha = 1.0
@@ -164,46 +151,49 @@ class AddRecordView: UIView {
                 delegate?.didFinish()
                 
             } else if home.addRecordSuccessFrame.intersects(draggableLabelBounds) {
-                if home.model.data.count != 0 {
-                    home.table.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-                }
-                
-                home.model.add(record: record!)
-                
-                if home.model.data[0].count == 1 { // means that the record with new date has just been added
-                    home.table.insertSections(IndexSet(0...0), with: .bottom)
-                    
-                } else {
-                    home.table.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
-                }
-                let cell = home.table.cellForRow(at: IndexPath(row: 0, section: 0))
-                cell?.alpha = 0.0
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + AnimationPatterns.removeAddRecordView.duration - 0.05) {
-                    cell?.alpha = 1.0
-                }
-                
+                delegate?.animateTransition(recordToPass: record!)
                 delegate?.didFinish()
+                
                 return 
                 
             } else {
-                UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.4, options: []) {
-                    home.addRecordView!.center.x = home.view.center.x
-                    home.addRecordView!.center.y = home.view.center.y
-                } completion: { (done) in
-                    
-                }
+                addRecordViewGetCentralized(homeController: home)
             }
             
-            
-            
-        default:
-            ()
+        default: ()
         }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    fileprivate func addRecordViewGetCentralized(homeController: ViewController) {
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.4, options: []) {
+            self.home.addRecordView!.center.y = self.home.view.center.y
+        }
+    }
+    
+    fileprivate func setupRecordViewWhenAboutToAdd(homeController: ViewController) {
+        recordView = RecordView(record: record!)
+        recordView.translatesAutoresizingMaskIntoConstraints = false
+        recordView.alpha = 0.0
+        recordView.layer.zPosition = draggableLabel.layer.zPosition + 1
+        self.addSubview(recordView)
+        NSLayoutConstraint.activate([
+            recordView.widthAnchor.constraint(equalTo: homeController.table.widthAnchor, constant: -20),
+            recordView.heightAnchor.constraint(equalToConstant: 70),
+            recordView.centerYAnchor.constraint(equalTo: draggableLabel.centerYAnchor),
+            recordView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+        ])
+        superview?.layoutIfNeeded()
+    }
+    
+    fileprivate func dragGestureAnimation(_ translation: CGPoint) -> UIViewPropertyAnimator {
+        return UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.67) {
+            self.center.x = self.startingPoint.x + translation.x
+            self.center.y = self.startingPoint.y + translation.y
+        }
     }
     
 }
